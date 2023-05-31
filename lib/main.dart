@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram/responsive/mobile_screen_layout.dart';
 import 'package:flutter_instagram/responsive/responsive_layout_screen.dart';
@@ -7,7 +8,19 @@ import 'package:flutter_instagram/utils/colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyDlcNPKS3tjl4WsBHS53eucHejmFFVtyZc',
+        appId: '1:493879039325:web:36f5bd5216ffcafb1544b4',
+        messagingSenderId: '493879039325',
+        projectId: 'flutter-instagram-58f46',
+        storageBucket: 'flutter-instagram-58f46.appspot.com',
+      ),
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
   runApp(const MyApp());
 }
 
