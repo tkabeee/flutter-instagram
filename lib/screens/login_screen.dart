@@ -55,6 +55,9 @@ class LoginScreenState extends State<LoginScreen> {
                 textInputType: TextInputType.text,
                 isPass: true,
               ),
+              const SizedBox(
+                height: 24,
+              ),
               // button login
               InkWell(
                 onTap: () {},
