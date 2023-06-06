@@ -93,7 +93,7 @@ class SignupScreenState extends State<SignupScreen> {
               ),
               // text field input for password
               TextFieldInput(
-                textEditingController: _emailController,
+                textEditingController: _passwordController,
                 hintText: 'Enter your password',
                 textInputType: TextInputType.text,
                 isPass: true,
@@ -133,7 +133,7 @@ class SignupScreenState extends State<SignupScreen> {
                     ),
                     color: blueColor,
                   ),
-                  child: const Text('Log in'),
+                  child: const Text('Sign up'),
                 ),
               ),
               const SizedBox(
