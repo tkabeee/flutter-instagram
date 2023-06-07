@@ -1,9 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram/resources/auth_methods.dart';
+import 'package:flutter_instagram/utils/utils.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter_instagram/utils/colors.dart';
 import 'package:flutter_instagram/widgets/text_field_input.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -17,6 +21,8 @@ class SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  Uint8List? _image;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -25,6 +31,35 @@ class SignupScreenState extends State<SignupScreen> {
     _passwordController.dispose();
     _bioController.dispose();
     _usernameController.dispose();
+  }
+
+  void selectImage() async {
+    Uint8List img = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = img;
+    });
+  }
+
+  void signUpUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    String res = await AuthMethods().signUpUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+      username: _usernameController.text,
+      bio: _bioController.text,
+      file: _image!,
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (res != 'Success') {
+      showSnackBar(context, res);
+    }
   }
 
   @override
@@ -53,16 +88,21 @@ class SignupScreenState extends State<SignupScreen> {
               // circular widget to accept and show our selected file
               Stack(
                 children: [
-                  const CircleAvatar(
-                    radius: 64,
-                    backgroundImage:
-                        NetworkImage('https://i.stack.imgur.com/l60Hf.png'),
-                  ),
+                  _image != null
+                      ? CircleAvatar(
+                          radius: 64,
+                          backgroundImage: MemoryImage(_image!),
+                        )
+                      : const CircleAvatar(
+                          radius: 64,
+                          backgroundImage: NetworkImage(
+                              'https://i.stack.imgur.com/l60Hf.png'),
+                        ),
                   Positioned(
                     bottom: -10,
                     left: 80,
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: selectImage,
                       icon: const Icon(
                         Icons.add_a_photo,
                       ),
@@ -112,15 +152,7 @@ class SignupScreenState extends State<SignupScreen> {
               ),
               // button login
               InkWell(
-                onTap: () async {
-                  String res = await AuthMethods().signUpUser(
-                    email: _emailController.text,
-                    password: _passwordController.text,
-                    username: _usernameController.text,
-                    bio: _bioController.text,
-                  );
-                  print(res);
-                },
+                onTap: signUpUser,
                 child: Container(
                   width: double.infinity,
                   alignment: Alignment.center,
@@ -133,7 +165,13 @@ class SignupScreenState extends State<SignupScreen> {
                     ),
                     color: blueColor,
                   ),
-                  child: const Text('Sign up'),
+                  child: _isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: primaryColor,
+                          ),
+                        )
+                      : const Text('Sign up'),
                 ),
               ),
               const SizedBox(
