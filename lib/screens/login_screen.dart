@@ -76,7 +76,7 @@ class LoginScreenState extends State<LoginScreen> {
               ),
               // text field input for password
               TextFieldInput(
-                textEditingController: _emailController,
+                textEditingController: _passwordController,
                 hintText: 'Enter your password',
                 textInputType: TextInputType.text,
                 isPass: true,
