@@ -18,12 +18,12 @@ class User {
   });
 
   Map<String, dynamic> toJson() => {
-    "username": username,
-    "uid": uid,
-    "email": email,
-    "bio": bio,
-    "followers": followers,
-    "following": following,
-    "photoUrl": photoUrl,
-  }
+        "username": username,
+        "uid": uid,
+        "email": email,
+        "bio": bio,
+        "followers": followers,
+        "following": following,
+        "photoUrl": photoUrl,
+      };
 }
